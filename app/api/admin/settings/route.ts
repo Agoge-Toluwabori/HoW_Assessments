@@ -1,0 +1,4 @@
+import {NextResponse} from 'next/server';import {z} from 'zod';import {adminDb} from '@/lib/supabase';
+const input=z.object({passcode:z.string(),durationMinutes:z.number().int().min(1).max(480).nullable(),isOpen:z.boolean(),showScores:z.boolean()});
+function valid(p:string){const expected=process.env.TEACHER_PASSCODE;return !!expected&&p===expected}
+export async function POST(req:Request){try{const i=input.parse(await req.json());if(!valid(i.passcode))return NextResponse.json({error:'Incorrect teacher passcode.'},{status:401});const {data,error}=await adminDb().from('assessment_settings').update({duration_minutes:i.durationMinutes,is_open:i.isOpen,show_scores_on_activity:i.showScores,updated_at:new Date().toISOString()}).eq('singleton_key',true).select().single();if(error)throw error;return NextResponse.json(data)}catch(e:any){return NextResponse.json({error:e.message},{status:400})}}
