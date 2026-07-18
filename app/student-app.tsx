@@ -1,6 +1,6 @@
 'use client';
 import {useEffect,useState} from 'react';import type {Attempt} from '@/lib/types';
-const classes=['Righteousness class','Peace Class','Joy'];
+const classes=['Righteousness Class','Peace Class','Joy'];
 export default function AssessmentApp(){const [attempt,setAttempt]=useState<Attempt|null>(null),[result,setResult]=useState<any>(null),[name,setName]=useState(''),[className,setClass]=useState(classes[0]),[other,setOther]=useState(''),[index,setIndex]=useState(0),[remaining,setRemaining]=useState<number|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState('');
  useEffect(()=>{if(!attempt?.deadlineAt||attempt.status!=='in_progress')return;const tick=()=>{const n=Math.max(0,Math.ceil((new Date(attempt.deadlineAt!).getTime()-Date.now())/1000));setRemaining(n);if(n===0)submit(true)};tick();const id=setInterval(tick,1000);return()=>clearInterval(id)},[attempt?.deadlineAt,attempt?.status]);
  async function request(path:string,body:any){const r=await fetch('/api/'+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!r.ok)throw new Error(j.error||'Request failed');return j}

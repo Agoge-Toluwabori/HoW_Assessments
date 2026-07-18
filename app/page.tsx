@@ -1,2 +1,2 @@
-import AssessmentApp from './student-app';
-export default function Page(){return <main><div className="hero"><p className="muted">OPEN-BOOK ASSESSMENT</p><h1>I Know Your Works</h1><p>Teaching series assessment on Christ and His Church</p></div><AssessmentApp/></main>}
+import Image from 'next/image';import AssessmentApp from './student-app';
+export default function Page(){return <main><div className="hero"><Image className="heroLogo" src="/house-of-wonders-logo.webp" width={140} height={140} alt="House of Wonders" priority/><p className="muted">OPEN-BOOK ASSESSMENT</p><h1>I Know Your Works</h1><p>Teaching series assessment on Christ and His Church</p></div><AssessmentApp/></main>}
