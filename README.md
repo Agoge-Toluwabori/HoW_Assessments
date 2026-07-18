@@ -21,3 +21,15 @@ All database tables have RLS enabled and direct anonymous/authenticated access i
 ## Verification
 
 Run `npm test`, `npm run typecheck`, and `npm run build`. Manual setup remains: add the supplied 40-question seed, configure Supabase environment variables, and deploy to Vercel.
+
+## Question-bank versioning
+
+The active production bank is `i-know-your-works-v2`. Migration `202607180002_version_question_bank_v2.sql` adds `bank_version`, `difficulty`, `lesson_number`, and `retired_at`, replaces global question-number uniqueness with `(bank_version, question_number)`, and retires v1 without deleting its rows. Existing `attempt_questions` and `attempt_answers` therefore retain their original foreign-key targets and submitted scores remain auditable.
+
+To rerun the approved v2 seed safely, use Node.js 20+:
+
+```powershell
+node scripts/seed-bank-v2.mjs C:\path\to\approved-question-bank.txt
+```
+
+The script upserts by bank version and question number, upserts options by question and option key, then fails unless it finds exactly 40 active v2 questions, 30 advanced and 10 standard questions, five options per question, and one correct option per question. Future banks should use a new immutable version, retire the prior active version, and update the attempt-start filter only after the new bank passes validation.

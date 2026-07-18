@@ -1,0 +1,15 @@
+begin;
+alter table public.questions add column if not exists bank_version text;
+alter table public.questions add column if not exists difficulty text;
+alter table public.questions add column if not exists lesson_number integer;
+alter table public.questions add column if not exists retired_at timestamptz;
+update public.questions set bank_version='i-know-your-works-v1' where bank_version is null;
+alter table public.questions alter column bank_version set not null;
+alter table public.questions alter column bank_version set default 'i-know-your-works-v1';
+alter table public.questions drop constraint if exists questions_question_number_key;
+alter table public.questions drop constraint if exists questions_difficulty_check;
+alter table public.questions add constraint questions_difficulty_check check(difficulty in('advanced','standard') or difficulty is null);
+alter table public.questions add constraint questions_bank_version_number_key unique(bank_version,question_number);
+create index if not exists questions_active_bank_idx on public.questions(bank_version,question_number) where is_active;
+update public.questions set is_active=false,retired_at=coalesce(retired_at,now()) where bank_version='i-know-your-works-v1' and is_active;
+commit;
