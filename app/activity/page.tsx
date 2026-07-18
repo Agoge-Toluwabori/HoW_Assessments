@@ -1,1 +1,1 @@
-import './dashboard.css';import Activity from './activity';export default function Page(){return <main className="wide"><Activity/></main>}
+import './dashboard.css';import Activity from './activity';import ReviewToggle from './review-toggle';export default function Page(){return <main className="wide"><Activity/><ReviewToggle/></main>}
