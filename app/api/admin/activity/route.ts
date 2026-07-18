@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {activityData} from '@/lib/activity-data';import {isTeacher} from '@/lib/teacher-auth';
+export const dynamic='force-dynamic';export async function GET(){if(!await isTeacher())return NextResponse.json({error:'Teacher sign-in required.'},{status:401});try{return NextResponse.json(await activityData(),{headers:{'cache-control':'no-store'}})}catch(e:any){return NextResponse.json({error:e.message},{status:500})}}

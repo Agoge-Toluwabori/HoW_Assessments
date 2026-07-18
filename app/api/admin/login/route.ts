@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {z} from 'zod';import {setTeacher,validPasscode} from '@/lib/teacher-auth';
+export async function POST(req:Request){const {passcode}=z.object({passcode:z.string().min(1).max(200)}).parse(await req.json());if(!validPasscode(passcode))return NextResponse.json({error:'Incorrect teacher passcode.'},{status:401});await setTeacher();return NextResponse.json({ok:true})}
